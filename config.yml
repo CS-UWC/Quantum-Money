@@ -1,0 +1,4 @@
+database:
+  name: "bank.db"
+  ledger_table: "ledger"
+  user_table: "users"
