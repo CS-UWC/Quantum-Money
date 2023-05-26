@@ -14,9 +14,9 @@ c = conn.cursor()
 
 data = json.load(sys.stdin)
 
-user_id = data['user_id']
+user_id = data['email']
 
-user = c.execute('SELECT * FROM users WHERE id = ?', (user_id,)).fetchone()
+user = c.execute('SELECT * FROM users WHERE email = ?', (user_id,)).fetchone()
 
 if user is None:
     respond.SendJson({
@@ -58,8 +58,6 @@ match bits:
         state = 2
     case [1, 1]:
         state = 3
-    case other:
-        state = -1
 
 cw.issue_banknote(serial, state, user_email, conn)
         
