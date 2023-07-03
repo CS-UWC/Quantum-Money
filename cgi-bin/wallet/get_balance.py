@@ -19,7 +19,7 @@ email = data['email']
 if not cw.check_table_exists(email, conn):
     cw.create_table(email, conn)
 
-notes = c.execute('SELECT serial, amount FROM "%s_wallet"' % email).fetchall()
+notes = c.execute('SELECT amount FROM "%s_wallet"' % email).fetchall()
 
 if notes is None:
     respond.SendJson({
@@ -27,8 +27,13 @@ if notes is None:
     })
     sys.exit()
 
+balance = 0
+
+for amount in notes:
+    balance += int(amount[0])
+
 response = {
-    "serials": notes,
+    "balance": balance,
 }
 
 respond.SendJson(response)

@@ -6,7 +6,7 @@ if __name__ == "__main__":
     surname = input("Enter your surname: ")
     email = input("Enter your email: ")
 
-    conn = sqlite3.connect('bank.db')
+    conn = sqlite3.connect('quantumbank.db')
 
     usr, exists = user_exists(email, conn)
     if not exists:

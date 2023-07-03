@@ -1,11 +1,11 @@
 def insert_user(firstname, surname, email, conn):
     c = conn.cursor()
-    c.execute("INSERT INTO users(firstname, surname, email) VALUES (?, ?, ?)", (firstname, surname, email))
+    c.execute("INSERT INTO user(firstname, surname, email, password) VALUES (?, ?, ?, '')", (firstname, surname, email))
     conn.commit()
 
 def fetch_user(email, conn):
     c = conn.cursor()
-    c.execute("SELECT * FROM users WHERE email=?", (email,))
+    c.execute("SELECT * FROM user WHERE email=?", (email,))
     return c.fetchone()
 
 def user_exists(email, conn):

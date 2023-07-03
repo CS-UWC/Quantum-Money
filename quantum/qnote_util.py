@@ -52,8 +52,8 @@ def verify_qnote(qnote: qnote.QNote, bits: list[int], bases: list[int]):
         measure_qubit(idx, bank_state, qc)
 
     bits_str = run_circuit(qc)
-    print(bits_str)
-    print(bank_qnote)
+    print("Measured: ", bits_str)
+    print("Expected: ", bank_qnote)
     return bits_str == bank_qnote
 
 def expected_result_from_state(state: int):

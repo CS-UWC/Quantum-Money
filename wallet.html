@@ -23,14 +23,22 @@
         <ul class="nav nav-pills">
             <li class="nav-item"><a class="nav-link text-white" href="index.html">Home</a></li>
             <li class="nav-item"><a class="nav-link text-white" href="wallet.html">Wallet</a></li>
+            <li class="nav-item"><a class="nav-link text-white" href="store.html">Store</a></li>
             <li class="nav-item"><a class="nav-link text-white" href="send.html">Send</a></li>
         </ul>
     </header>
+    <!--
+        Welcome + Balance Banner
+    -->
     <div class="bg-primary p-5 text-white rounded-bottom">
         <h1 id="welcome"></h1>
-        <h2 id="total">Total QRands: R </h2>
+        <h2>Total QRands: <img src="static/images/svg/ket.svg" style="width: 3rem;" class="img-fluid"></img> <span
+                id="total"></span></h2>
         <h2 id="amount"></h2>
     </div>
+    <!--
+        Wallet + Purchase QNotes Buttons
+    -->
     <div class="p-5">
         <div class="row">
             <div class="col-md-6 column">
@@ -43,7 +51,44 @@
             <div class="col-md-6 column">
                 <div class="row justify-content-end">
                     <button class="btn btn-primary m-2" id="sendbutton">Send QNotes</button>
-                    <button class="btn btn-primary m-2" id="purchase-button">Purchase QNotes</button>
+                    <button type="button" class="btn btn-primary m-2" data-bs-toggle="modal"
+                        data-bs-target="#purchaseQNoteModal">Purchase QNotes</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!--
+        Purchase QNotes Modal
+    -->
+    <div class="modal fade" id="purchaseQNoteModal" tabindex="-1" data-bs-config={backdrop:true}>
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h1 class="modal-title fs-5" id="exampleModalLabel">Purchase QNotes</h1>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form>
+                        <div class="mb-3">
+                            <label for="qnote-quantity" class="col-form-label">Amount of QNotes:</label>
+                            <input type="text" class="form-control" id="qnote-quantity">
+                        </div>
+                        <label for="qnote-amounts" class="col-form-label">QNote Value:</label>
+                        <div id="qnote-amounts" class="d-flex flex-row justify-content-evenly">
+                            <div class="container p-2 border">1</div>
+                            <div class="container p-2 border">5</div>
+                            <div class="container p-2 border">10</div>
+                            <div class="container p-2 border">20</div>
+                            <div class="container p-2 border">50</div>
+                            <div class="container p-2 border">100</div>
+                            <div class="container p-2 border">200</div>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <div id="total_qnotes" class="w-full">p</div>
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    <button type="button" id="purchase-qnote-btn" class="btn btn-primary">Purchase</button>
                 </div>
             </div>
         </div>

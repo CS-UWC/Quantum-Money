@@ -1,8 +1,8 @@
-
 $(document).ready(function () {
     let user = fetchUserFromCache();
-    
+
     GetWallet(user.email);
+    GetBalance(user.email);
 
     $('#sendbutton').click(function () {
         window.location.href = 'send.html';
@@ -10,11 +10,11 @@ $(document).ready(function () {
 });
 
 function GetWallet(email) {
-    
+
     $.ajax({
         url: '/cgi-bin/wallet.py',
         type: 'POST',
-        data: JSON.stringify({'email': email}),
+        data: JSON.stringify({ 'email': email }),
         error: function (xhr, status, error) {
             // Handle the error if the AJAX request fails
             alert('Error: ' + error);
@@ -24,14 +24,19 @@ function GetWallet(email) {
                 console.log({ data });
             }
             let banknotes = data['serials'];
-            $('#total').append(banknotes.length);
             for (let i = 0; i < banknotes.length; i++) {
-                let serial = banknotes[i];
+                console.log(banknotes[i])
+                let serial = banknotes[i][0];
+                let amount = banknotes[i][1];
                 const banknote = `
-                    <div class="card mb-2" style="width: 18rem;" id="banknote">
+                    <div class="card mb-2 border border-warning" style="width: 18rem;" id="banknote">
                         <div class="card-body">
-                            <h3 class="card-title">R 1</h3>
-                            <p class="card-text" >Serial Number: ${serial}</p>
+                            <div class="d-flex justify-content-center">
+                                <div class="rounded-circle p-4 border border-warning mx-auto d-flex justify-content-center align-center">
+                                    <h3 class="card-title"><img src="static/images/svg/ket.svg" style="width: 2rem;"class="img-fluid"></img> ${amount}</h3>
+                                </div>
+                            </div>    
+                            <p class="card-text" >${serial}</p>
                         </div>
                     </div>
                 `;
@@ -43,4 +48,26 @@ function GetWallet(email) {
             });
         }
     })
+}
+
+function GetBalance(email) {
+    $.ajax({
+        url: '/cgi-bin/wallet/get_balance.py',
+        type: 'POST',
+        data: JSON.stringify({ 'email': email }),
+        error: function (xhr, status, error) {
+            // Handle the error if the AJAX request fails
+            alert('Error: ' + error);
+        },
+        success: function (data) {
+            let amount = 0;
+            if (data['error']) {
+                console.log({ data });
+                $('#total').text(amount);
+                return
+            }
+            let balance = data['balance'];
+            $('#total').text(balance);
+        }
+    });
 }

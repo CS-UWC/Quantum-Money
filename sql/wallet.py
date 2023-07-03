@@ -1,6 +1,6 @@
 def get_note(email, serial, conn):
     c = conn.cursor()
-    c.execute("SELECT * FROM '%s_wallet' WHERE serial = ?" % (email), (serial,))
+    c.execute("SELECT serial, state, amount FROM '%s_wallet' WHERE serial = ?" % (email), (serial,))
     return c.fetchone()
 
 def send_qnote(sender: str, receiver: str, serials: list[str], conn):
@@ -13,7 +13,7 @@ def send_qnote(sender: str, receiver: str, serials: list[str], conn):
         else:
             c = conn.cursor()
             c.execute("DELETE FROM '%s_wallet' WHERE serial = ?" % (sender), (serial,))
-            c.execute("INSERT INTO '%s_wallet'(serial, state) VALUES (?, ?)" % (receiver), (serial, state))
+            c.execute("INSERT INTO '%s_wallet'(serial, state, amount) VALUES (?, ?, 1)" % (receiver), (serial, state))
             conn.commit()
     return True
 

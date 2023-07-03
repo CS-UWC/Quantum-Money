@@ -8,15 +8,16 @@ import sql.create_wallet as cw
 import sys
 
 import db
+import consts
 
-conn = sqlite3.connect('bank.db')
+conn = sqlite3.connect(consts.DB_NAME)
 c = conn.cursor()
 
 data = json.load(sys.stdin)
 
 user_id = data['email']
 
-user = c.execute('SELECT * FROM users WHERE email = ?', (user_id,)).fetchone()
+user = c.execute('SELECT * FROM user WHERE email = ?', (user_id,)).fetchone()
 
 if user is None:
     respond.SendJson({
@@ -36,30 +37,37 @@ def generate_serial():
 
 
 def generateBits(size):
-    result = []
+    result = ""
     for i in range(size):
-        result.append(random.randint(0, 1))
+        result += str(random.randint(0, 1))
     return result
 
 serial = generate_serial()
-bits = generateBits(2)
-res = c.execute('INSERT INTO ledger(serial, bit_0, bit_1) VALUES (?, ?, ?)', (serial, bits[0], bits[1]))
+bits = generateBits(consts.NUM_QUBITS)
+bases = generateBits(consts.NUM_QUBITS)
+
+
+res = c.execute('INSERT INTO ledger(serial, bits, bases, amount) VALUES (?, ?, ?, 1)', (serial, bits, bases))
 conn.commit()
 
 if not cw.check_table_exists(user_id, conn):
     cw.create_table(user_id, conn)
 
-match bits:
-    case [0, 0]:
-        state = 0
-    case [1, 0]:
-        state = 1
-    case [0, 1]:
-        state = 2
-    case [1, 1]:
-        state = 3
+qnote_state = ""
+for i in range(consts.NUM_QUBITS):
+    state = -1
+    match [bits[i], bases[i]]:
+        case ['0', '0']:
+            state = 1
+        case ['1', '0']:
+            state = 2
+        case ['0', '1']:
+            state = 3
+        case ['1', '1']:
+            state = 4
+    qnote_state += str(state)
 
-cw.issue_banknote(serial, state, user_email, conn)
+cw.issue_banknote(serial, qnote_state, user_email, conn)
         
 response = {
     "serial": serial,

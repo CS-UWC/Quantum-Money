@@ -4,17 +4,17 @@ import db
 import json
 import sqlite3
 import sys
-
+import consts
 import utils.cgi_respond as respond
 
-conn = sqlite3.connect('bank.db')
+conn = sqlite3.connect(consts.DB_NAME)
 c = conn.cursor()
 
 data = json.load(sys.stdin)
 
 user_id = data['email']
 
-user = c.execute('SELECT * FROM users WHERE email = ?', (user_id,)).fetchone()
+user = c.execute('SELECT id,firstname,surname,email FROM user WHERE email = ?', (user_id,)).fetchone()
 
 if user is None:
     respond.SendJson({

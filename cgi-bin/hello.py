@@ -5,7 +5,7 @@ import cgi
 import cgitb
 import json
 import sys
-
+import consts
 import utils.cgi_respond as respond
 
 data = json.load(sys.stdin)

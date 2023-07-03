@@ -4,7 +4,7 @@ import json
 import random
 import sqlite3
 import sys
-
+import consts
 import utils.cgi_respond as respond
 
 from qiskit import QuantumCircuit, QuantumRegister, ClassicalRegister, transpile
@@ -14,7 +14,7 @@ data = json.load(sys.stdin)
 serial = data['serial']
 email = data['email']
 
-conn = sqlite3.connect('bank.db')
+conn = sqlite3.connect(consts.DB_NAME)
 c = conn.cursor()
 
 note = c.execute('SELECT * FROM "%s_wallet" WHERE serial = ?' % (email), (serial,)).fetchone()

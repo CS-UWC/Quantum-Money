@@ -9,3 +9,15 @@ function fetchUserFromCache() {
 function storeUserInCache(user) {
     sessionStorage.setItem("loggedInUser", JSON.stringify(user));
 }
+
+function storeWalletInCache(wallet) {
+    sessionStorage.setItem("wallet", JSON.stringify(wallet));
+}
+
+function fetchWalletFromCache() {
+    let wallet = sessionStorage.getItem("wallet");
+    if (wallet) {
+        return JSON.parse(wallet);
+    }
+    return null;
+}
