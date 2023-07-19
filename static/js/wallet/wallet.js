@@ -4,10 +4,13 @@ $(document).ready(function () {
     GetWallet(user.email);
     GetBalance(user.email);
 
+    GetLimit(user.email);
+
     $('#sendbutton').click(function () {
         window.location.href = 'send.html';
     });
 });
+
 
 function GetWallet(email) {
 
@@ -43,7 +46,6 @@ function GetWallet(email) {
                 $('#wallet').append(banknote);
             }
             $('#banknote').click(function () {
-                console.log("clicked");
                 $(this).toggleClass('selected');
             });
         }
@@ -71,3 +73,4 @@ function GetBalance(email) {
         }
     });
 }
+

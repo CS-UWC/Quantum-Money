@@ -60,6 +60,7 @@ def generateBits(size):
 
 for qnote_value in qnotes:
     quantity = int(qnotes[qnote_value])
+    c.execute('UPDATE user SET "limit" = "limit" - ? WHERE email = ?', (int(qnote_value) * quantity, email))
     for i in range(quantity):
         serial = generate_serial()
         bits = generateBits(consts.NUM_QUBITS)

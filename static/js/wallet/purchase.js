@@ -6,13 +6,27 @@ $(document).ready(function () {
         // Set the click event listener
         div.click(function () {
             // Get the value of the div
-            var value = div.text();
-
+            
             // we want to highlight the div that was clicked
             // and remove the highlight from the other divs
             div.addClass('border-success');
             divs.not(this).removeClass('border-success');
+            console.log("passage")
+            var value = div.text();
+            qnote_value = value;
+            UpdateView();
         });
+    });
+
+    $("#qnote-quantity").on("input", function() {
+        let amount = $(this).val();
+        if (!amount || isNaN(amount) || (amount <= 0)) {
+            return;
+        }
+        // convert to number
+        amount = parseInt(amount);
+        qnote_amount = amount;
+        UpdateView();
     });
 
     $('#purchase-qnote-btn').click(function () {
@@ -30,6 +44,11 @@ $(document).ready(function () {
         // check if positive
         if (quantity <= 0) {
             alert('Please enter a positive number');
+            return;
+        }
+
+        if (calcFinalLimit() > 50000) {
+            alert('You have exceeded your limit');
             return;
         }
 
@@ -66,33 +85,45 @@ $(document).ready(function () {
         $('#purchaseQNoteModal').modal('toggle');
         window.location.href = 'wallet.html';
     });
-    $('#unused').click(function () {
-        var loggedInUser = JSON.parse(sessionStorage.getItem('loggedInUser'));
-
-        var amount = prompt('How much would you like to purchase?');
-        if (!amount) {
-            return;
-        }
-        if (amount <= 0) {
-            alert('Please enter a positive amount');
-            return;
-        }
-
-        for (let i = 0; i < amount; i++) {
-            $.ajax({
-                url: '/cgi-bin/issue.py',
-                type: 'POST',
-                data: JSON.stringify({ 'email': loggedInUser.email }),
-                error: function (xhr, status, error) {
-                    // Handle the error if the AJAX request fails
-                    alert('Error: ' + error);
-                },
-                success: function (data) {
-                    console.log({ data });
-
-                }
-            });
-        }
-        window.location.href = 'wallet.html';
-    });
+   
 });
+
+let limit = 0
+let limitView = 0
+let qnote_amount = 0
+let qnote_value = 0
+
+function GetLimit(email) {
+    $.ajax({
+        url: '/cgi-bin/user/get_limit.py',
+        type: 'POST',
+        async: false,
+        data: JSON.stringify({ 'email': email }),
+        error: function (xhr, status, error) {
+            // Handle the error if the AJAX request fails
+            alert('Error: ' + error);
+        },
+        success: function (data) {
+            if (data['error']) {
+                console.log({ data });
+                return
+            }
+            console.log(data);
+            limit = data['limit'];
+            UpdateView();
+        }
+    });
+}
+
+
+function calcFinalLimit() {
+    let balance = qnote_amount * qnote_value;
+    limitView = 50000 - limit + balance;
+    return limitView;
+}
+
+function UpdateView() {
+    let balance = qnote_amount * qnote_value;
+    limitView = 50000 - limit + balance;
+    $('#qnote-limit').text('R' + limitView);
+}
