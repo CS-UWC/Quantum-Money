@@ -4,10 +4,13 @@ let serials = [];
 $(document).ready(function () {
     let user = fetchUserFromCache();
     sendClickLogic();
-    GetWallet(user.email);
+    let balance = GetBalance(user.email);
+    $('#total').append(balance);
+    let wallet = GetWallet(user.email);
+    GenerateWalletView(wallet);
 });
 
-function GetWallet(email) {
+function GetWalletOld(email) {
 
     $.ajax({
         url: '/cgi-bin/wallet.py',
@@ -57,25 +60,26 @@ function sendClickLogic() {
     $('#sendButton').click(function () {
         let user = fetchUserFromCache();
         let email = user.email;
-        console.log(email);
         let client = $('#client').val();
-        console.log(client)
         if (client == null || client == "") {
             alert("You must enter a receiver's email");
             return;
         }
 
-        if (serials.length == 0) {
+        if (selected.length == 0) {
             alert("You must select at least one banknote");
             return;
         }
         
-        let serial = serials[0];
+        let selected_serials = [];
+        for (let i = 0; i < selected.length; i++) {
+            selected_serials.push(selected[i].serial);
+        }
     
         $.ajax({
-            url: '/cgi-bin/send.py',
+            url: '/cgi-bin/transfer/transfer.py',
             type: 'POST',
-            data: JSON.stringify({'serial': serial, 'email': email, 'receiver': client}),
+            data: JSON.stringify({'serials': selected_serials, 'email': email, 'receiver': client}),
             error: function (xhr, status, error) {
                 // Handle the error if the AJAX request fails
                 alert('Error: ' + error);
@@ -86,7 +90,16 @@ function sendClickLogic() {
                     alert(data['error'])
                     return;
                 }
-                alert(data['msg']);
+                if (data['success'])
+                {
+                    alert(data['msg']);
+                    clearSelected();
+                    clearWalletFromCache();
+                    window.location.href = '/send.html';
+                    return;
+                }
+                alert('Something went wrong');
+                
             }
         });
     });

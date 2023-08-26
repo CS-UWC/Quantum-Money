@@ -2,12 +2,14 @@ $(document).ready(function () {
     $('#loginForm').submit(function (event) {
         event.preventDefault();
         var username = $('#username').val();
-        console.log(username)
+        var password = $('#password').val();
+
+        console.log(password)
 
         $.ajax({
-            url: '/cgi-bin/user.py',
+            url: '/cgi-bin/user/login.py',
             type: 'post',
-            data: JSON.stringify({'email': username}),
+            data: JSON.stringify({'email': username, 'password': password}),
             error: function(xhr, status, error) {
                 // Handle the error if the AJAX request fails
                 alert('Error: ' + error);
@@ -19,8 +21,8 @@ $(document).ready(function () {
                     return;
                 }
                 var loggedInUser = data['user'];
-        
                 sessionStorage.setItem('loggedInUser', JSON.stringify(loggedInUser));
+                clearWalletFromCache()
                 window.location.href = 'wallet.html';
             }
         });

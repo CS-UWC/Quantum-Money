@@ -1,7 +1,10 @@
 $(document).ready(function () {
+
     let user = fetchUserFromCache();
 
-    GetWallet(user.email);
+    wallet = GetWallet(user.email);
+    GenerateWalletView(wallet);
+
     GetBalance(user.email);
 
     GetLimit(user.email);
@@ -12,7 +15,7 @@ $(document).ready(function () {
 });
 
 
-function GetWallet(email) {
+function GetWalletOld(email) {
 
     $.ajax({
         url: '/cgi-bin/wallet.py',

@@ -21,3 +21,8 @@ function fetchWalletFromCache() {
     }
     return null;
 }
+
+// force fetch from DB
+function clearWalletFromCache() {   
+    sessionStorage.removeItem("wallet");
+}

@@ -7,6 +7,12 @@ def SendJson(data):
     sys.stdout.write(json.dumps(data))
     sys.stdout.close()
 
+def SendError(error):
+    msg = {
+        'error': error
+    }
+    SendJson(msg)
+
 def SendHtml(data):
     sys.stdout.write("Content-Type: text/html")
     sys.stdout.write("\n\n")

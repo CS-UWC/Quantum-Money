@@ -11,46 +11,106 @@
         integrity="sha384-ENjdO4Dr2bkBIFxQpeoTz1HIcje39Wm4jDKdf19U8gI4ddQ3GYNS7NTKfAdVQSZe"
         crossorigin="anonymous"></script>
     <script src="static/js/utils.js"></script>
-    
-
+    <script src="static/js/send/transfer_logic.js"></script>
+    <script src="/static/js/common/fetch_wallet.js"></script>
 </head>
 
+<style>
+    body {
+        height: 100%;
+        background-image: url('/static/images/gif/bokeh-effect-yellow.gif');
+        background-size: cover;
+        background-repeat: no-repeat;
+        background-attachment: fixed;
+        backdrop-filter: blur(100px) brightness(0.75);
+    }
+
+    main {
+        min-height: 100vh;
+        background-color: rgba(255, 255, 255, 0.85);
+    }
+
+    .transfer-list-component {
+        background-color: rgba(255, 255, 255, 0.85);
+        height: 100vh;
+    }
+</style>
+
 <body>
-    <header class="d-flex flex-wrap bg-primary px-5 pt-3 justify-content-between ">
+    <header class="d-flex flex-wrap px-5 pt-3 justify-content-between ">
         <p class="navbar-brand text-white d-flex">Quantum Bank</p>
         <ul class="nav nav-pills">
-            <li class="nav-item"><a class="nav-link text-white" href="index.html">Home</a></li>
             <li class="nav-item"><a class="nav-link text-white" href="wallet.html">Wallet</a></li>
             <li class="nav-item"><a class="nav-link text-white" href="store.html">Store</a></li>
-            <li class="nav-item"><a class="nav-link text-white" href="send.html">Send</a></li>
+            <li class="nav-item active"><a class="nav-link text-white" href="send.html">Transfer</a></li>
+            <li class="nav-item"><a class="nav-link text-white" href="index.html">Log Out</a></li>
         </ul>
     </header>
-    <div class="bg-primary p-5 text-white rounded-bottom">
-        <h1 id="Send"></h1>
-        <h2 id="total">Total QRands: R </h2>
+    <div class="p-5 text-white rounded-bottom">
+        <h1>Transfer</h1>
+        <h2>Total QRands: <img src="static/images/svg/ket.svg" style="width: 3rem;" class="img-fluid"></img> <span
+                id="total"></span></h2>
     </div>
-    <div class="p-5">
-        <div class="row">
-            <div class="col-md-6 column">
-                <h2>Wallet</h2>
+    <main>
+        <div class="p-5">
+            <div class="row">
+                <div class="col-md-4 column">
+                    <h2>Wallet</h2>
 
-                <div class=" my-5">
-                    <div id="wallet" class="column"></div>
+                    <div class=" my-5">
+                        <div id="wallet" class="column"></div>
+                    </div>
+                </div>
+                <div class="col-md-6 column justify-content-between">
+                    <div class="row align-items-center">
+                        <div class="col-8">
+                            <div class="row align-items-center">
+                                <div class="col-md-auto">
+                                    <p>Receiver: </p>
+                                </div>
+                                <div class="col">
+                                    <input name="EmailAddress" type="email" id="client" placeholder="Email Address">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col">
+                            <button class="btn btn-primary m-2" id="sendButton">Send</button>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="py-4" id="selected-amount">
+                            No amount selected
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="container py-4 rounded transfer-list-component">
+                            <ul class="list-group" id="selected-serials">
+
+                            </ul>
+                        </div>
+                    </div>
                 </div>
             </div>
-            <div class="col-md-6 column justify-content-between">
-                <div class="column my-2">
-                    <label for="EmailAddress"> Receiver Email</label>
-                    <input name="EmailAddress" type="text" id="client">
+        </div>
+
+
+    </main>
+    <div class="modal" id="noteModal" tabindex="-1" role="dialog" data-bs-config={backdrop:true} aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="noteModalLabel"></h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
                 </div>
-                <div class="column my-2" id="selected-amount">
+                <div class="modal-body" id="qnote-list">
+                    <ul id="qnote-serial-list">
+
+                    </ul>
                 </div>
-                <div class="column my-2" id="selected-serials">
-                    
-                </div>
-                <div class="row justify-content-end my-2">
-                    <button class="btn btn-primary m-2" id="sendButton">Send</button>
-                    <button class="btn btn-primary m-2">Cancel</button>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
                 </div>
             </div>
         </div>

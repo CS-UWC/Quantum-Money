@@ -83,6 +83,9 @@ $(document).ready(function () {
 
         alert('You have purchased ' + (quantity) + ' QNotes worth ' + amount + ' each. Total: R' + (quantity * amount));
         $('#purchaseQNoteModal').modal('toggle');
+        // The wallet view only fetches from db if it doesn't exist in cache
+        // so we need to clear it from cache to force a fetch from db
+        clearWalletFromCache();
         window.location.href = 'wallet.html';
     });
    

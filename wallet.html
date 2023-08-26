@@ -11,26 +11,45 @@
         integrity="sha384-ENjdO4Dr2bkBIFxQpeoTz1HIcje39Wm4jDKdf19U8gI4ddQ3GYNS7NTKfAdVQSZe"
         crossorigin="anonymous"></script>
     <script src="static/js/utils.js"></script>
+    <script src="static/js/common/fetch_wallet.js"></script>
+
     <script src="static/js/wallet/welcome.js"></script>
     <script src="static/js/wallet/wallet.js"></script>
     <script src="static/js/wallet/purchase.js"></script>
+    
 
 </head>
 
+<style>
+    body {
+        height: 100%;
+        background-image: url('/static/images/gif/bokeh-effect-yellow.gif');
+        background-size: cover;
+        background-repeat: no-repeat;
+        background-attachment: fixed;
+        backdrop-filter: blur(100px) brightness(0.75);
+    }
+
+    main {
+        min-height: 100vh;
+        background-color: rgba(255, 255, 255, 0.85);
+    }
+</style>
+
 <body>
-    <header class="d-flex flex-wrap bg-primary px-5 pt-3 justify-content-between ">
+    <header class="d-flex flex-wrap px-5 pt-3 justify-content-between ">
         <p class="navbar-brand text-white d-flex">Quantum Bank</p>
         <ul class="nav nav-pills">
-            <li class="nav-item"><a class="nav-link text-white" href="index.html">Home</a></li>
             <li class="nav-item"><a class="nav-link text-white" href="wallet.html">Wallet</a></li>
             <li class="nav-item"><a class="nav-link text-white" href="store.html">Store</a></li>
-            <li class="nav-item"><a class="nav-link text-white" href="send.html">Send</a></li>
+            <li class="nav-item"><a class="nav-link text-white" href="send.html">Transfer</a></li>
+            <li class="nav-item"><a class="nav-link text-white" href="index.html">Log Out</a></li>
         </ul>
     </header>
     <!--
         Welcome + Balance Banner
     -->
-    <div class="bg-primary p-5 text-white rounded-bottom">
+    <div class="p-5 text-white rounded-bottom">
         <h1 id="welcome"></h1>
         <h2>Total QRands: <img src="static/images/svg/ket.svg" style="width: 3rem;" class="img-fluid"></img> <span
                 id="total"></span></h2>
@@ -39,24 +58,26 @@
     <!--
         Wallet + Purchase QNotes Buttons
     -->
-    <div class="p-5">
-        <div class="row">
-            <div class="col-md-6 column">
-                <h2>Wallet</h2>
+    <main>
+        <div class="p-5">
+            <div class="row">
+                <div class="col-md-6 column">
+                    <h2>Wallet</h2>
 
-                <div class=" my-5">
-                    <div id="wallet" class="column"></div>
+                    <div class=" my-5">
+                        <div id="wallet" class="column"></div>
+                    </div>
                 </div>
-            </div>
-            <div class="col-md-6 column">
-                <div class="row justify-content-end">
-                    <button class="btn btn-primary m-2" id="sendbutton">Send QNotes</button>
-                    <button type="button" class="btn btn-primary m-2" data-bs-toggle="modal"
-                        data-bs-target="#purchaseQNoteModal">Purchase QNotes</button>
+                <div class="col-md-6 column">
+                    <div class="row justify-content-end">
+                        <button class="btn btn-primary m-2" id="sendbutton">Send QNotes</button>
+                        <button type="button" class="btn btn-primary m-2" data-bs-toggle="modal"
+                            data-bs-target="#purchaseQNoteModal">Purchase QNotes</button>
+                    </div>
                 </div>
             </div>
         </div>
-    </div>
+    </main>
     <!--
         Purchase QNotes Modal
     -->
