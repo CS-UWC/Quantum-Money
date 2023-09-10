@@ -16,8 +16,8 @@ import utils
 
 
 class Bank:
-    def __init__(self):
-        self._conn = sqlite3.connect(consts.DATABASE)
+    def __init__(self, database=consts.DATABASE):
+        self._conn = sqlite3.connect(database)
         pass
     
     def get_wallet(self, email) -> Wallet:

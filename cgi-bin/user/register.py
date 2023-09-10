@@ -7,7 +7,7 @@ import json
 import sys
 import consts
 import utils.cgi_respond as respond
-import bank.banker
+from bank.banker import Bank
 
 data = json.load(sys.stdin)
 password = data['password']
@@ -18,7 +18,7 @@ surname = data['surname']
 
 
 
-b = banker.Bank()
+b = Bank()
 
 if b.check_account_exists(email):
     respond.SendError('Account already exists')

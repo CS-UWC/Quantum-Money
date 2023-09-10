@@ -4,6 +4,8 @@ import quantum.qledger
 import random
 import consts
 
+from bank.banker import Bank
+
 import time
 
 class Brute:
@@ -31,26 +33,24 @@ class Brute:
     def brute(self, note: qnote.QuantumNote):
         n = len(note.get_state())
     
-        # generate note to test
-        actual_bits, actual_basis = self.generate_random_state(n)
+        b = Bank()
+        ledger = b.get_ledger()
 
         print("QNote: %d qubits" % n)
         print("Number of permutations: %d" % self.calc_permutations(n))
         print("Success rate: %f" % self.calc_success_rate(n))
 
         count = 1
-        # generate random states and test them
         start_time = time.time()
 
         matches = []
         done = False
         while not done:
-            # print("Attempt %d" % count)
-            bits, basis = note.get_state_encoded()
-
             verified = True
+            bits, basis = note.get_state_encoded()
+            # Run N times to reduce false positives
             for i in range(self.verify_iterations):
-                if not quantum.qledger.verify(bits, basis, actual_bits, actual_basis):
+                if not ledger.verify(note):
                     verified = False
 
             if verified:
@@ -82,6 +82,19 @@ class Brute:
         for i in range(len(matches)):
             print("Match %d" % (i + 1))
             print("Bits: %s Basis: %s" % (matches[i][0], matches[i][1]))
+
+        if len(matches) > 1:
+            print("Determining actual bits and basis")
+            while len(matches) > 1:
+                remaining = []
+                for match in matches:
+                    note.set_state_encoded(match[0], match[1])
+                    if ledger.verify(note):
+                        remaining.append(match)
+                matches = remaining
+            print("Final Match => Bits: %s Basis: %s" % (matches[0][0], matches[0][1]))
+
+
         print("Time taken: %f seconds" % (end_time - start_time))
 
 

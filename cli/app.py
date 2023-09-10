@@ -1,5 +1,6 @@
 import brute as brute_app
 from model.quantum_note import QuantumNote
+from bank.banker import Bank
 
 class App():
     def __init__(self):
@@ -23,7 +24,9 @@ class App():
         b = brute_app.Brute()
 
         serial = input("Enter serial: ")
-        state = [int(i) for i in ('1' * 8)]
+        qubits = int(input("Enter number of qubits: "))
+
+        state = [int(i) for i in ('1' * qubits)]
         qnote = QuantumNote(serial, state)
         b.brute(qnote)
 
