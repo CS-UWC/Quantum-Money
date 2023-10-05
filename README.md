@@ -28,7 +28,7 @@ USE_SIMULATOR = False
 
 Next, it is copy the config.template file to the .aws folder within the user directory
 
-Windows: C:/Users/<user>/.aws/config
+Windows: C:/Users/your_username/.aws/config
 
 Linux: ~/.aws/config
 
