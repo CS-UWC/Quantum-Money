@@ -1,5 +1,8 @@
 from qiskit import QuantumCircuit, QuantumRegister, ClassicalRegister, execute, Aer, result as qiskit_result
 
+from quantum.backend import get_backend
+from quantum.circuit_runner import run, result_aggregator
+
 def _setup(n: int) -> QuantumCircuit:
     return QuantumCircuit(n, n)
 
@@ -7,7 +10,8 @@ def initialise_note(bits: list[int], basis: list[int], circuit: QuantumCircuit) 
     for idx, (b, s) in enumerate(zip(bits, basis)):
         # |0>
         if b == 0 and s == 0:
-            circuit.reset(idx)
+            continue
+            # circuit.reset(idx)
         # |1>
         elif b == 1 and s == 0:
             circuit.x(idx)
@@ -31,14 +35,13 @@ def measure_note(bits: list[int], basis: list[int], circuit: QuantumCircuit) -> 
 def get_measurement_bits(result: qiskit_result.Result):
     # Get the first result
     # reverse the bits
-    bits = result.get_memory()[0][::-1]
-    return bits
+    # choose key with most common value
+    bits = max(result.get_counts().keys(), key=(lambda key: result.get_counts()[key]))
+
+    return bits[::-1]
 
 def _run(circuit: QuantumCircuit):
-    simulator = Aer.get_backend('qasm_simulator')
-    job = execute(circuit, simulator, shots=1, memory=True)
-
-    result = job.result()
+    result = run(circuit)
     return result
 
 def verify_measurement(measured_bits: str, bits: list[int], basis: list[int]) -> bool:
@@ -59,10 +62,10 @@ def verify(bits: list[int], basis: list[int], actual_bits: list[int], actual_bas
     return verify_measurement(measured_bits, actual_bits, actual_basis)
 
 if __name__ == "__main__":
-    actual_bits = [1, 1]
+    actual_bits = [1, 0]
     actual_basis = [0, 1]
 
-    user_bits = [0, 1]
+    user_bits = [1, 0]
     user_basis = [0, 1]
 
     circuit = _setup(len(user_bits))
