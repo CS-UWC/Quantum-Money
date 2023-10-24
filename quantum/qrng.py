@@ -1,5 +1,7 @@
 from qiskit import QuantumCircuit, QuantumRegister, ClassicalRegister, execute, Aer
 
+from quantum.circuit_runner import run
+
 # Quantum Random Number Generation
 
 def _setup(length: int = 1) :
@@ -12,14 +14,14 @@ def _setup(length: int = 1) :
     return circuit
 
 def _run(circuit: QuantumCircuit):
-    simulator = Aer.get_backend('qasm_simulator')
-    job = execute(circuit, simulator, shots=1, memory=True)
-    result = job.result()
+    result = run(circuit)
     return result
     
 
 def _get_measurement_result(result) -> str:
-    return result.get_memory()[0]
+    bits = max(result.get_counts().keys(), key=(lambda key: result.get_counts()[key]))
+    
+    return bits
 
 def random(length: int = 1):
     """
