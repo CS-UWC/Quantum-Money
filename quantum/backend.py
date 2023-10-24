@@ -3,22 +3,21 @@ from qiskit import QuantumCircuit, QuantumRegister, ClassicalRegister, execute, 
 
 USE_SIMULATOR = True
 
-
 # returns (backend, backend_type)
 # where backend_type is either 'local' or 'aws'
 def get_backend():
     simulator = Aer.get_backend('qasm_simulator')
     if USE_SIMULATOR:
-        print('Using local simulator.')
+        # print('Using local simulator.')
         return (simulator, 'local')
 
     try:
-        print('Connecting to AWS Braket.')
+        # print('Connecting to AWS Braket.')
         backend = _get_aws_backend()
-        print('Connected to AWS Braket.')
+        # print('Connected to AWS Braket.')
         return (backend, 'aws')
     except:
-        print('Could not connect to AWS Braket. Using local simulator instead.')
+        # print('Could not connect to AWS Braket. Using local simulator instead.')
         return (simulator, 'local')
 
 

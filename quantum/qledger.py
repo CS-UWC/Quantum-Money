@@ -33,11 +33,10 @@ def measure_note(bits: list[int], basis: list[int], circuit: QuantumCircuit) -> 
     return circuit
 
 def get_measurement_bits(result: qiskit_result.Result):
-    # Get the first result
-    # reverse the bits
     # choose key with most common value
     bits = max(result.get_counts().keys(), key=(lambda key: result.get_counts()[key]))
-
+    
+    # reverse the bits
     return bits[::-1]
 
 def _run(circuit: QuantumCircuit):
