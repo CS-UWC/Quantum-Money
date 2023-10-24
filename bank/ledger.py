@@ -4,7 +4,11 @@ import quantum.qledger as qledger
 import quantum.qrng
 from sql import ledger as sqlledger
 
+import time
+
 import tools.mint
+
+ONE_HOUR = 60 * 60
 
 class Ledger:
     def __init__(self, conn):
@@ -44,9 +48,27 @@ class Ledger:
         actual_bits = [int(i) for i in sqlnote[1]]
         actual_basis = [int(i) for i in sqlnote[2]]
 
+        current_time = int(time.time())
+
+        lock_time = sqlledger.get_lock(qnote, self._conn)
+        if current_time - lock_time < ONE_HOUR:
+            return False
+
+        attempts = sqlledger.get_attempts(qnote, self._conn)
+        if attempts >= 3:
+            sqlledger.set_lock(current_time, qnote, self._conn)
+            sqlledger.reset_attempts(qnote, self._conn)
+            return False
+
         client_bits, client_basis = qnote.get_state_encoded()
 
-        return qledger.verify(client_bits, client_basis, actual_bits, actual_basis)
+        result =  qledger.verify(client_bits, client_basis, actual_bits, actual_basis)
+        if result:
+            sqlledger.reset_attempts(qnote, self._conn)
+            return True
+        else:
+            sqlledger.increment_attempts(qnote, self._conn)
+            return False
 
     
 
