@@ -73,7 +73,7 @@ function purchaseElectricity() {
 
     payload = {
         'email': loggedInUser.email,
-        'receiver': 'alice@gmail.com',
+        'receiver': 'admin@quantumbank.com',
         'serial': note,
     }
     $.ajax({
