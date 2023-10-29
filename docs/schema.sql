@@ -1,8 +1,10 @@
 CREATE TABLE ledger (
-    "serialno" TEXT NOT NULL UNIQUE,
+    "serial" TEXT NOT NULL UNIQUE,
     "bits" TEXT NOT NULL,
     "bases" TEXT NOT NULL,
     "amount" TEXT NOT NULL,
+    "lock" INTEGER DEFAULT 0,
+    "attempts" INTEGER DEFAULT 0,
     PRIMARY KEY("serial")
 );
 
@@ -14,3 +16,10 @@ CREATE TABLE user (
     "password" TEXT NOT NULL,
     PRIMARY KEY("id")
 );
+
+CREATE TABLE 'admin@quantumbank.com_wallet' (
+    "serial" TEXT NOT NULL, 
+    "state" TEXT NOT NULL, 
+    "amount" INTEGER NOT NULL, 
+    PRIMARY KEY("serial")
+    )
